@@ -1,35 +1,26 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import { Button } from "./components/ui/button";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="min-h-svh p-6">
+        <div className="h-[80vh] flex justify-between items-center">
+          <div className="w-3xl">
+            <h1 className="text-5xl font-bold">Accelerates your workflow</h1>
+            <p className="text-2xl font-medium">
+              Our task management app simplifies your workflow, making it easier
+              to organize and prioritize your tasks.
+            </p>
+            <Button size={"lg"}>Sign Up</Button>
+          </div>
+          <div className="grow">
+            <img src="lp001.svg" className="size-96 mx-auto" />
+          </div>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
