@@ -1,25 +1,23 @@
-import "./App.css";
-import { Button } from "./components/ui/button";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ThemeProvider } from "./components/themeprovider";
+import Login from "./pages/login/page.tsx";
+import Layout from "./components/Layout.tsx";
+import Landing from "./pages/landing/page.tsx";
+import NotFound from "./pages/not-found/page.tsx";
 
 function App() {
   return (
-    <>
-      <div className="min-h-svh p-6">
-        <div className="h-[80vh] flex justify-between items-center">
-          <div className="w-3xl">
-            <h1 className="text-5xl font-bold">Accelerates your workflow</h1>
-            <p className="text-2xl font-medium">
-              Our task management app simplifies your workflow, making it easier
-              to organize and prioritize your tasks.
-            </p>
-            <Button size={"lg"}>Sign Up</Button>
-          </div>
-          <div className="grow">
-            <img src="lp001.svg" className="size-96 mx-auto" />
-          </div>
-        </div>
-      </div>
-    </>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <BrowserRouter>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<Landing />} />
+            <Route path="/login/" element={<Login />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
