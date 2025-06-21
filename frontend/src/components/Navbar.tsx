@@ -10,10 +10,7 @@ export default function Navbar() {
         <Link to="/" className="hover:underline">
           Home
         </Link>
-        <Link to="/about" className="hover:underline">
-          Contact
-        </Link>
-        <Link to="/login" className="hover:underline">
+        <Link to="/authentication" className="hover:underline">
           Login
         </Link>
       </div>
