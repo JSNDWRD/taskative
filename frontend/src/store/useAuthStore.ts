@@ -1,0 +1,125 @@
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+
+interface AuthState {
+  session: { token: string } | null; // Example session object, adjust as needed
+  user: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    age: number;
+  } | null;
+  isLoading: boolean;
+  error: string | null;
+
+  setSession: (session: { token: string } | null) => void;
+  setUser: (
+    user: {
+      id: string;
+      email: string;
+      firstName: string;
+      lastName: string;
+      age: number;
+    } | null
+  ) => void;
+  setLoading: (loading: boolean) => void;
+  setError: (error: string | null) => void;
+
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+  signup: (
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+    age: number
+  ) => Promise<void>;
+}
+
+const useAuthStore = create<AuthState>()(
+  persist(
+    (set, _get) => ({
+      session: null,
+      user: null,
+      isLoading: false,
+      error: null,
+      setSession: (session) => set({ session }),
+      setUser: (user) => set({ user }),
+      setLoading: (loading) => set({ isLoading: loading }),
+      setError: (error) => set({ error }),
+
+      login: async (email, password) => {
+        set({ isLoading: true, error: null });
+        try {
+          const request = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/login`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email,
+                password,
+              }),
+            }
+          );
+          const data = await request.json();
+          console.log(data);
+          if (!request.ok) throw new Error(data.error || "Login failed");
+          set({ session: data.session, user: data.user, isLoading: false });
+        } catch (error: any) {
+          set({ error: error.message, isLoading: false });
+        }
+      },
+
+      logout: async () => {
+        // set({ isLoading: true, error: null });
+        // try {
+        //   const { error } = await supabase.auth.signOut();
+        //   if (error) throw error;
+        //   set({ session: null, user: null, isLoading: false });
+        // } catch (error: any) {
+        //   set({ error: error.message, isLoading: false });
+        // }
+      },
+
+      signup: async (email, password, firstName, lastName, age) => {
+        set({ isLoading: true, error: null });
+        try {
+          const request = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/signup`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email,
+                password,
+                firstName,
+                lastName,
+                age,
+              }),
+            }
+          );
+          const data = await request.json();
+          console.log(data);
+          if (!request.ok) throw new Error(data.error || "Signup failed");
+          set({ session: data.session, user: data.user, isLoading: false });
+        } catch (error: any) {
+          set({ error: error.message, isLoading: false });
+        }
+      },
+    }),
+    {
+      name: "auth-storage", // unique name for your storage
+      storage: createJSONStorage(() => localStorage), // (optional) by default it uses localStorage
+      // only store the session and user, not isLoading or error
+      partialize: (state) => ({ session: state.session, user: state.user }),
+    }
+  )
+);
+
+export default useAuthStore;
