@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
 import useAuthStore from "@/store/useAuthStore";
+import { useState } from "react";
 
 interface FormData {
   firstName: string;
@@ -30,18 +30,23 @@ export default function Authentication() {
     password: "",
   });
 
+  const login = useAuthStore((state) => state.login);
+  const signup = useAuthStore((state) => state.signup);
+  let isLoading = useAuthStore((state) => state.isLoading);
+
   const authenticate = () => {
-    isLogin
-      ? useAuthStore((state) => state.login(formData.email, formData.password))
-      : useAuthStore((state) =>
-          state.signup(
-            formData.email,
-            formData.password,
-            formData.firstName,
-            formData.lastName,
-            formData.age
-          )
-        );
+    if (isLogin) {
+      login(formData.email, formData.password);
+    } else {
+      console.log("Email: ", formData.email);
+      signup(
+        formData.email,
+        formData.password,
+        formData.firstName,
+        formData.lastName,
+        formData.age
+      );
+    }
   };
   return (
     <div className="h-dvh flex items-center justify-center">
@@ -168,7 +173,7 @@ export default function Authentication() {
             onClick={() => {
               authenticate();
             }}
-            disabled={!useAuthStore((state) => state.isLoading)}
+            disabled={isLoading}
           >
             {!isLogin ? "Sign Up" : "Login"}
           </Button>
@@ -178,7 +183,7 @@ export default function Authentication() {
             onClick={() => {
               SetIsLogin(!isLogin);
             }}
-            disabled={!useAuthStore((state) => state.isLoading)}
+            disabled={isLoading}
           >
             {isLogin ? "Sign Up" : "Login"}
           </Button>

@@ -1,16 +1,28 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { type Session, type User } from "@supabase/supabase-js";
-import { supabase } from "@/utils/supabase";
 
 interface AuthState {
-  session: Session | null;
-  user: User | null;
+  session: { token: string } | null; // Example session object, adjust as needed
+  user: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    age: number;
+  } | null;
   isLoading: boolean;
   error: string | null;
 
-  setSession: (session: Session | null) => void;
-  setUser: (user: User | null) => void;
+  setSession: (session: { token: string } | null) => void;
+  setUser: (
+    user: {
+      id: string;
+      email: string;
+      firstName: string;
+      lastName: string;
+      age: number;
+    } | null
+  ) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
 
@@ -27,12 +39,12 @@ interface AuthState {
 
 const useAuthStore = create<AuthState>()(
   persist(
-    (set, get) => ({
+    (set, _get) => ({
       session: null,
       user: null,
-      isLoading: true,
+      isLoading: false,
       error: null,
-      setSession: (session) => set({ session, user: session?.user || null }),
+      setSession: (session) => set({ session }),
       setUser: (user) => set({ user }),
       setLoading: (loading) => set({ isLoading: loading }),
       setError: (error) => set({ error }),
@@ -40,11 +52,22 @@ const useAuthStore = create<AuthState>()(
       login: async (email, password) => {
         set({ isLoading: true, error: null });
         try {
-          const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-          });
-          if (error) throw error;
+          const request = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/login`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email,
+                password,
+              }),
+            }
+          );
+          const data = await request.json();
+          console.log(data);
+          if (!request.ok) throw new Error(data.error || "Login failed");
           set({ session: data.session, user: data.user, isLoading: false });
         } catch (error: any) {
           set({ error: error.message, isLoading: false });
@@ -52,31 +75,38 @@ const useAuthStore = create<AuthState>()(
       },
 
       logout: async () => {
-        set({ isLoading: true, error: null });
-        try {
-          const { error } = await supabase.auth.signOut();
-          if (error) throw error;
-          set({ session: null, user: null, isLoading: false });
-        } catch (error: any) {
-          set({ error: error.message, isLoading: false });
-        }
+        // set({ isLoading: true, error: null });
+        // try {
+        //   const { error } = await supabase.auth.signOut();
+        //   if (error) throw error;
+        //   set({ session: null, user: null, isLoading: false });
+        // } catch (error: any) {
+        //   set({ error: error.message, isLoading: false });
+        // }
       },
 
       signup: async (email, password, firstName, lastName, age) => {
         set({ isLoading: true, error: null });
         try {
-          const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-              data: {
-                first_name: firstName,
-                last_name: lastName,
-                age: age,
+          const request = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}/signup`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
               },
-            },
-          });
-          if (error) throw error;
+              body: JSON.stringify({
+                email,
+                password,
+                firstName,
+                lastName,
+                age,
+              }),
+            }
+          );
+          const data = await request.json();
+          console.log(data);
+          if (!request.ok) throw new Error(data.error || "Signup failed");
           set({ session: data.session, user: data.user, isLoading: false });
         } catch (error: any) {
           set({ error: error.message, isLoading: false });
