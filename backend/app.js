@@ -29,10 +29,15 @@ app.post("/login", async (req, res) => {
   if (!isMatch) {
     return res.status(401).json({ error: "Invalid credentials" });
   }
-  // Auth success: return user info or token
+  // Auth succeed
+  const userCopy = { ...user };
+  delete userCopy.password;
+  delete userCopy.role;
+
   res.json({
     message: "Login successful",
-    user: { id: user.id, email: user.email },
+    user: userCopy,
+    session: { id: user.id, currentUser: userCopy },
   });
 });
 app.post("/signup", async (req, res) => {

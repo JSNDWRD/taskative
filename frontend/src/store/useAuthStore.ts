@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 interface AuthState {
-  session: { token: string } | null; // Example session object, adjust as needed
+  session: { id: string; user: Object } | null;
   user: {
     id: string;
     email: string;
@@ -12,8 +12,7 @@ interface AuthState {
   } | null;
   isLoading: boolean;
   error: string | null;
-
-  setSession: (session: { token: string } | null) => void;
+  setSession: (session: { id: string; user: Object } | null) => void;
   setUser: (
     user: {
       id: string;
@@ -48,7 +47,6 @@ const useAuthStore = create<AuthState>()(
       setUser: (user) => set({ user }),
       setLoading: (loading) => set({ isLoading: loading }),
       setError: (error) => set({ error }),
-
       login: async (email, password) => {
         set({ isLoading: true, error: null });
         try {
@@ -75,14 +73,7 @@ const useAuthStore = create<AuthState>()(
       },
 
       logout: async () => {
-        // set({ isLoading: true, error: null });
-        // try {
-        //   const { error } = await supabase.auth.signOut();
-        //   if (error) throw error;
-        //   set({ session: null, user: null, isLoading: false });
-        // } catch (error: any) {
-        //   set({ error: error.message, isLoading: false });
-        // }
+        set({ user: null, session: null });
       },
 
       signup: async (email, password, firstName, lastName, age) => {
@@ -105,9 +96,8 @@ const useAuthStore = create<AuthState>()(
             }
           );
           const data = await request.json();
-          console.log(data);
           if (!request.ok) throw new Error(data.error || "Signup failed");
-          set({ session: data.session, user: data.user, isLoading: false });
+          set({ isLoading: false });
         } catch (error: any) {
           set({ error: error.message, isLoading: false });
         }
