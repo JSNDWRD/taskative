@@ -49,7 +49,7 @@ export default function Authentication() {
     }
   };
   return (
-    <div className="h-dvh flex items-center justify-center">
+    <div className="min-h-dvh flex items-center justify-center px-6">
       <Card className="w-full max-w-sm my-auto">
         <CardHeader>
           <CardTitle>
