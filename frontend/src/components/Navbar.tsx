@@ -12,7 +12,7 @@ export default function Navbar() {
   }, [onSession]);
   const logout = useAuthStore((state) => state.logout);
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 py-4 bg-background border-b border-border">
+    <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between h-14 px-6 py-4 bg-background border-b border-border">
       <div className="text-xl font-bold">
         <Link to="/">Taskative</Link>
       </div>
