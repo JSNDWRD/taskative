@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useAuthStore from "@/store/useAuthStore";
+import { Loader2Icon } from "lucide-react";
 import { useState } from "react";
 
 interface FormData {
@@ -175,7 +176,16 @@ export default function Authentication() {
             }}
             disabled={isLoading}
           >
-            {!isLogin ? "Sign Up" : "Login"}
+            {isLoading ? (
+              <>
+                <Loader2Icon />
+                Please wait
+              </>
+            ) : !isLogin ? (
+              "Sign Up"
+            ) : (
+              "Login"
+            )}
           </Button>
           <Button
             variant={"ghost"}

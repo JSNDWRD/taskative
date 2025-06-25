@@ -10,13 +10,18 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Home, LogOut, User } from "lucide-react";
+import { Home, ListTodo, LogOut, Mail, NotebookPen, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import useAuthStore from "@/store/useAuthStore";
 
 export default function DashboardSidebar() {
-  const navItems = [{ title: "Home", url: "/", icon: Home }];
+  const navItems = [
+    { title: "Home", url: "/", icon: Home },
+    { title: "Task Tracker", url: "/app/tasks", icon: ListTodo },
+    { title: "Note Taking", url: "/app/notes", icon: NotebookPen },
+    { title: "Messages", url: "/app/messages", icon: Mail },
+  ];
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
   return (

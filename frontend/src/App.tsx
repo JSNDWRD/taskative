@@ -6,6 +6,9 @@ import NotFound from "./pages/not-found/page.tsx";
 import Authentication from "./pages/authentication/page.tsx";
 import useAuthStore from "./store/useAuthStore.ts";
 import Dashboard from "./pages/dashboard/page.tsx";
+import Notes from "./pages/notes/page.tsx";
+import Tasks from "./pages/tasks/page.tsx";
+import Messages from "./pages/messages/page.tsx";
 
 function App() {
   const session = useAuthStore((state) => state.session);
@@ -20,7 +23,7 @@ function App() {
               path="/authentication"
               element={
                 onSession ? (
-                  <Navigate to={"/dashboard"} replace />
+                  <Navigate to={"/app"} replace />
                 ) : (
                   <Authentication />
                 )
@@ -28,10 +31,40 @@ function App() {
             />
             <Route path="*" element={<NotFound />} />
             <Route
-              path="/dashboard"
+              path="/app"
               element={
                 onSession ? (
                   <Dashboard />
+                ) : (
+                  <Navigate to={"/authentication"} replace />
+                )
+              }
+            />
+            <Route
+              path="app/tasks"
+              element={
+                onSession ? (
+                  <Tasks />
+                ) : (
+                  <Navigate to={"/authentication"} replace />
+                )
+              }
+            />
+            <Route
+              path="app/notes"
+              element={
+                onSession ? (
+                  <Notes />
+                ) : (
+                  <Navigate to={"/authentication"} replace />
+                )
+              }
+            />
+            <Route
+              path="app/messages"
+              element={
+                onSession ? (
+                  <Messages />
                 ) : (
                   <Navigate to={"/authentication"} replace />
                 )

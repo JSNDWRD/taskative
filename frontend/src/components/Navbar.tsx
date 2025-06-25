@@ -2,6 +2,7 @@ import useAuthStore from "@/store/useAuthStore";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
+import { LogOut } from "lucide-react";
 
 export default function Navbar() {
   const session = useAuthStore((state) => state.session);
@@ -22,7 +23,7 @@ export default function Navbar() {
         </Link>
 
         {onSession ? (
-          <Link to="/dashboard" className="hover:underline">
+          <Link to="/app" className="hover:underline">
             Dashboard
           </Link>
         ) : (
@@ -30,7 +31,12 @@ export default function Navbar() {
             Login
           </Link>
         )}
-        {onSession && <Button onClick={logout}>Log Out</Button>}
+        {onSession && (
+          <Button onClick={logout} size={"sm"}>
+            <LogOut />
+            Sign Out
+          </Button>
+        )}
       </div>
     </nav>
   );

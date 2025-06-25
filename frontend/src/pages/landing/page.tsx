@@ -15,7 +15,7 @@ export default function Landing() {
             to organize and prioritize your tasks.
           </p>
           <div className="flex items-center gap-2 py-4">
-            <Link to={onSession ? "/dashboard" : "/authentication"}>
+            <Link to={onSession ? "/app" : "/authentication"}>
               <Button size={"lg"}>{onSession ? "Dashboard" : "Sign Up"}</Button>
             </Link>
             <Link to={"#"}>
