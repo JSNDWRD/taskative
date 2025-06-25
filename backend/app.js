@@ -79,7 +79,7 @@ app.post("/signup", async (req, res) => {
 app.get("/task/:taskId", async (req, res) => {
   const { taskId } = req.params;
   try {
-    const body = await prisma.log.findUnique({ where: { id: taskId } });
+    const body = await prisma.task.findUnique({ where: { id: taskId } });
     res.status(200).json(body);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -89,7 +89,7 @@ app.get("/task/:taskId", async (req, res) => {
 app.get("/task", async (req, res) => {
   const { authorId } = req.body;
   try {
-    const body = await prisma.log.findMany({ where: { authorId: authorId } });
+    const body = await prisma.task.findMany({ where: { authorId: authorId } });
     res.status(200).json(body);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -99,7 +99,7 @@ app.get("/task", async (req, res) => {
 app.post("/task", async (req, res) => {
   const { author, title, startAt, endAt } = req.body;
   try {
-    await prisma.log.create({
+    await prisma.task.create({
       data: { author: author, title: title, startAt: startAt, endAt: endAt },
     });
     res.status(201).json({ message: "Task created successfully." });
@@ -112,7 +112,7 @@ app.put("/task/:taskId", async (req, res) => {
   const { taskId } = req.params;
   const { title, startAt, endAt } = req.body;
   try {
-    await prisma.log.update({
+    await prisma.task.update({
       where: { id: taskId },
       data: {
         title: title,
@@ -129,7 +129,7 @@ app.put("/task/:taskId", async (req, res) => {
 app.delete("/task/:taskId", async (req, res) => {
   const { taskId } = req.params;
   try {
-    await prisma.log.delete({ where: { id: taskId } });
+    await prisma.task.delete({ where: { id: taskId } });
     res.status(204).json({ message: "Task deleted successfully." });
   } catch (error) {
     res.status(500).json({ error: error.message });

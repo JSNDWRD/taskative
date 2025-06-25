@@ -22,12 +22,12 @@ model User {
   lastName String
   age Int
   role Role @default(USER)
-  logs Log[]
+  tasks Task[]
   notes Note[]
   createdAt DateTime @default(now())
 }
 
-model Log {
+model Task {
   id Int @id @default(autoincrement())
   author User? @relation(fields: [authorId], references: [id])
   authorId Int?
