@@ -23,6 +23,7 @@ model User {
   age Int
   role Role @default(USER)
   logs Log[]
+  notes Note[]
   createdAt DateTime @default(now())
 }
 
@@ -31,6 +32,19 @@ model Log {
   author User? @relation(fields: [authorId], references: [id])
   authorId Int?
   title String @db.VarChar(255)
+  startAt DateTime?
+  endAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Note {
+  id Int @id @default(autoincrement())
+  author User? @relation(fields: [authorId], references: [id])
+  authorId Int?
+  title String @db.VarChar(255)
+  description String
+  content String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

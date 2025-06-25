@@ -7,7 +7,7 @@ export default function LoadingButton({
   size: "default" | "sm" | "lg" | "icon" | null | undefined;
 }) {
   return (
-    <Button size={size}>
+    <Button size={size} className="hover:cursor-progress">
       <Loader2Icon />
       Please wait
     </Button>
