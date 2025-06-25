@@ -6,7 +6,7 @@ import { SidebarProvider, SidebarTrigger } from "./ui/sidebar";
 
 export default function Layout() {
   const location = useLocation();
-  const isDashboard = location.pathname.startsWith("/dashboard");
+  const isDashboard = location.pathname.startsWith("/app");
 
   return (
     <div>

@@ -20,7 +20,7 @@ function App() {
               path="/authentication"
               element={
                 onSession ? (
-                  <Navigate to={"/dashboard"} replace />
+                  <Navigate to={"/app"} replace />
                 ) : (
                   <Authentication />
                 )
@@ -28,7 +28,7 @@ function App() {
             />
             <Route path="*" element={<NotFound />} />
             <Route
-              path="/dashboard"
+              path="/app"
               element={
                 onSession ? (
                   <Dashboard />
