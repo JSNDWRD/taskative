@@ -76,7 +76,6 @@ app.post("/signup", async (req, res) => {
 });
 
 // Task Tracker
-
 app.get("/task/:taskId", async (req, res) => {
   const { taskId } = req.params;
   try {
@@ -84,6 +83,16 @@ app.get("/task/:taskId", async (req, res) => {
     res.status(200).json(body);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/task", async (req, res) => {
+  const { authorId } = req.body;
+  try {
+    const body = await prisma.log.findMany({ where: { authorId: authorId } });
+    res.status(200).json(body);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -111,6 +120,7 @@ app.put("/task/:taskId", async (req, res) => {
         endAt: endAt,
       },
     });
+    res.status(200).json({ message: "Task updated successfully." });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -121,6 +131,72 @@ app.delete("/task/:taskId", async (req, res) => {
   try {
     await prisma.log.delete({ where: { id: taskId } });
     res.status(204).json({ message: "Task deleted successfully." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Note Taking
+app.get("/note/:noteId", async (req, res) => {
+  const { noteId } = req.params;
+  try {
+    const body = await prisma.note.findUnique({ where: { id: noteId } });
+    res.status(200).json(body);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/note", async (req, res) => {
+  const { authorId } = req.body;
+  try {
+    const body = await prisma.note.findMany({ where: { authorId: authorId } });
+    res.status(200).json(body);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/note", async (req, res) => {
+  const { author, title, description, content } = req.body;
+  try {
+    await prisma.note.create({
+      data: {
+        author: author,
+        title: title,
+        description: description,
+        content: content,
+      },
+    });
+    res.status(201).json({ message: "Note created successfully." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put("/note/:noteId", async (req, res) => {
+  const { noteId } = req.params;
+  const { title, description, content } = req.body;
+  try {
+    await prisma.note.update({
+      where: { id: noteId },
+      data: {
+        title: title,
+        description: description,
+        content: content,
+      },
+    });
+    res.status(200).json({ message: "Note updated successfully." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.delete("/note/:noteId", async (req, res) => {
+  const { noteId } = req.params;
+  try {
+    await prisma.note.delete({ where: { id: noteId } });
+    res.status(204).json({ message: "Note deleted successfully." });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
