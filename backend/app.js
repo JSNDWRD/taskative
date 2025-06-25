@@ -11,12 +11,8 @@ const port = process.env.PORT;
 app.use(cors()); // Enable cors for all origins, specify later
 app.use(express.json());
 
-app.get("/", (_req, res) => {
-  res.json({ message: "Hello World!" });
-});
-
 app.listen(port, () => {
-  console.log(`Listening to port ${port}`);
+  console.log(`Listening to ${port}`);
 });
 
 app.post("/login", async (req, res) => {
@@ -40,6 +36,7 @@ app.post("/login", async (req, res) => {
     session: { id: user.id, currentUser: userCopy },
   });
 });
+
 app.post("/signup", async (req, res) => {
   console.log("SIGNUP REQUEST");
   try {
@@ -75,5 +72,56 @@ app.post("/signup", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal server error." });
+  }
+});
+
+// Task Tracker
+
+app.get("/task/:taskId", async (req, res) => {
+  const { taskId } = req.params;
+  try {
+    const body = await prisma.log.findUnique({ where: { id: taskId } });
+    res.status(200).json(body);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/task", async (req, res) => {
+  const { author, title, startAt, endAt } = req.body;
+  try {
+    await prisma.log.create({
+      data: { author: author, title: title, startAt: startAt, endAt: endAt },
+    });
+    res.status(201).json({ message: "Task created successfully." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put("/task/:taskId", async (req, res) => {
+  const { taskId } = req.params;
+  const { title, startAt, endAt } = req.body;
+  try {
+    await prisma.log.update({
+      where: { id: taskId },
+      data: {
+        title: title,
+        startAt: startAt,
+        endAt: endAt,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.delete("/task/:taskId", async (req, res) => {
+  const { taskId } = req.params;
+  try {
+    await prisma.log.delete({ where: { id: taskId } });
+    res.status(204).json({ message: "Task deleted successfully." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });

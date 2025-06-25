@@ -34,6 +34,7 @@ model Log {
   title String @db.VarChar(255)
   startAt DateTime?
   endAt DateTime?
+  status Status @default(NOT_STARTED)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -52,4 +53,10 @@ model Note {
 enum Role {
   USER
   ADMIN
+}
+
+enum Status {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
 }
