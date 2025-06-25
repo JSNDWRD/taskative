@@ -1,4 +1,3 @@
-import LoadingButton from "@/components/LoadingButton";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useAuthStore from "@/store/useAuthStore";
+import { Loader2Icon } from "lucide-react";
 import { useState } from "react";
 
 interface FormData {
@@ -168,20 +168,25 @@ export default function Authentication() {
           </form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          {isLoading ? (
-            <LoadingButton />
-          ) : (
-            <Button
-              type="button"
-              className="w-full"
-              onClick={() => {
-                authenticate();
-              }}
-              disabled={isLoading}
-            >
-              {!isLogin ? "Sign Up" : "Login"}
-            </Button>
-          )}
+          <Button
+            type="button"
+            className="w-full"
+            onClick={() => {
+              authenticate();
+            }}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2Icon />
+                Please wait
+              </>
+            ) : !isLogin ? (
+              "Sign Up"
+            ) : (
+              "Login"
+            )}
+          </Button>
           <Button
             variant={"ghost"}
             className="w-full"

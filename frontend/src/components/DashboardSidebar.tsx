@@ -20,7 +20,7 @@ export default function DashboardSidebar() {
     { title: "Home", url: "/", icon: Home },
     { title: "Task Tracker", url: "/app/tasks", icon: ListTodo },
     { title: "Note Taking", url: "/app/notes", icon: NotebookPen },
-    { title: "Message", url: "/app/messages", icon: Mail },
+    { title: "Messages", url: "/app/messages", icon: Mail },
   ];
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);

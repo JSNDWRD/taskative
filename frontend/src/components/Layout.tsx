@@ -3,11 +3,11 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import DashboardSidebar from "./DashboardSidebar";
 import { SidebarProvider, SidebarTrigger } from "./ui/sidebar";
+import InformationModal from "./InformationModal";
 
 export default function Layout() {
   const location = useLocation();
   const isDashboard = location.pathname.startsWith("/app");
-
   return (
     <div>
       {!isDashboard && <Navbar />}
@@ -20,11 +20,13 @@ export default function Layout() {
             </div>
             <Outlet />
             <Footer />
+            <InformationModal />
           </main>
         </SidebarProvider>
       ) : (
         <main className="min-h-dvh pt-14">
           <Outlet />
+          <InformationModal />
         </main>
       )}
       {!isDashboard && <Footer />}

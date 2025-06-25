@@ -11,7 +11,7 @@ interface AuthState {
     age: number;
   } | null;
   isLoading: boolean;
-  error: string | null;
+  information: { message: string; type: "Error" | "Success" | "Info" } | null;
   setSession: (session: { id: string; user: Object } | null) => void;
   setUser: (
     user: {
@@ -23,7 +23,9 @@ interface AuthState {
     } | null
   ) => void;
   setLoading: (loading: boolean) => void;
-  setError: (error: string | null) => void;
+  setInformation: (
+    information: { message: string; type: "Error" | "Success" | "Info" } | null
+  ) => void;
 
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -42,16 +44,21 @@ const useAuthStore = create<AuthState>()(
       session: null,
       user: null,
       isLoading: false,
-      error: null,
+      information: null,
       setSession: (session) => set({ session }),
       setUser: (user) => set({ user }),
       setLoading: (loading) => set({ isLoading: loading }),
-      setError: (error) => set({ error }),
+      setInformation: (information) => set({ information }),
       login: async (email, password) => {
-        set({ isLoading: true, error: null });
+        set({ isLoading: true, information: null });
         try {
           if (!email || !password) {
-            set({ error: "Fill all the required fields." });
+            set({
+              information: {
+                message: "Fill all the required fields.",
+                type: "Error",
+              },
+            });
             return;
           }
           const request = await fetch(
@@ -68,25 +75,37 @@ const useAuthStore = create<AuthState>()(
             }
           );
           const data = await request.json();
-          console.log(data);
-          if (!request.ok) throw new Error(data.error || "Login failed");
-          set({ session: data.session, user: data.user });
+          if (!request.ok) throw new Error(data.error || "Login failed.");
+          set({
+            session: data.session,
+            user: data.user,
+            information: { message: "Login success.", type: "Success" },
+          });
         } catch (error: any) {
-          set({ error: error.message });
+          set({ information: { message: error.message, type: "Error" } });
         } finally {
           set({ isLoading: false });
         }
       },
 
       logout: async () => {
-        set({ user: null, session: null });
+        set({
+          user: null,
+          session: null,
+          information: { message: "Signed out", type: "Success" },
+        });
       },
 
       signup: async (email, password, firstName, lastName, age) => {
-        set({ isLoading: true, error: null });
+        set({ isLoading: true, information: null });
         try {
           if (!email || !password || !firstName || !lastName || !age) {
-            set({ error: "Fill all the required fields." });
+            set({
+              information: {
+                message: "Fill all the required fields.",
+                type: "Error",
+              },
+            });
             return;
           }
           const request = await fetch(
@@ -107,8 +126,11 @@ const useAuthStore = create<AuthState>()(
           );
           const data = await request.json();
           if (!request.ok) throw new Error(data.error || "Signup failed");
+          set({
+            information: { message: "Sign up success.", type: "Success" },
+          });
         } catch (error: any) {
-          set({ error: error.message });
+          set({ information: { message: error.message, type: "Error" } });
         } finally {
           set({ isLoading: false });
         }
