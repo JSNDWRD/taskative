@@ -32,7 +32,7 @@ export default function Navbar() {
           </Link>
         )}
         {onSession && (
-          <Button onClick={logout}>
+          <Button onClick={logout} size={"sm"}>
             <LogOut />
             Sign Out
           </Button>

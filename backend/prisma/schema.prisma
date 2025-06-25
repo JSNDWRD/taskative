@@ -35,6 +35,7 @@ model Log {
   startAt DateTime?
   endAt DateTime?
   status Status @default(NOT_STARTED)
+  priority Priority @default(NOT_SET)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -59,4 +60,11 @@ enum Status {
   NOT_STARTED
   IN_PROGRESS
   COMPLETED
+}
+
+enum Priority {
+  HIGH
+  MEDIUM
+  LOW
+  NOT_SET
 }
