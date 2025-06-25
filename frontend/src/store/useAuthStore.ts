@@ -50,6 +50,10 @@ const useAuthStore = create<AuthState>()(
       login: async (email, password) => {
         set({ isLoading: true, error: null });
         try {
+          if (!email || !password) {
+            set({ error: "Fill all the required fields." });
+            return;
+          }
           const request = await fetch(
             `${import.meta.env.VITE_BACKEND_URL}/login`,
             {
@@ -66,9 +70,11 @@ const useAuthStore = create<AuthState>()(
           const data = await request.json();
           console.log(data);
           if (!request.ok) throw new Error(data.error || "Login failed");
-          set({ session: data.session, user: data.user, isLoading: false });
+          set({ session: data.session, user: data.user });
         } catch (error: any) {
-          set({ error: error.message, isLoading: false });
+          set({ error: error.message });
+        } finally {
+          set({ isLoading: false });
         }
       },
 
@@ -79,6 +85,10 @@ const useAuthStore = create<AuthState>()(
       signup: async (email, password, firstName, lastName, age) => {
         set({ isLoading: true, error: null });
         try {
+          if (!email || !password || !firstName || !lastName || !age) {
+            set({ error: "Fill all the required fields." });
+            return;
+          }
           const request = await fetch(
             `${import.meta.env.VITE_BACKEND_URL}/signup`,
             {
@@ -97,9 +107,10 @@ const useAuthStore = create<AuthState>()(
           );
           const data = await request.json();
           if (!request.ok) throw new Error(data.error || "Signup failed");
-          set({ isLoading: false });
         } catch (error: any) {
-          set({ error: error.message, isLoading: false });
+          set({ error: error.message });
+        } finally {
+          set({ isLoading: false });
         }
       },
     }),

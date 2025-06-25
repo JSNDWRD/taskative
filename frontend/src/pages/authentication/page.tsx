@@ -1,3 +1,4 @@
+import LoadingButton from "@/components/LoadingButton";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -167,16 +168,20 @@ export default function Authentication() {
           </form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Button
-            type="button"
-            className="w-full"
-            onClick={() => {
-              authenticate();
-            }}
-            disabled={isLoading}
-          >
-            {!isLogin ? "Sign Up" : "Login"}
-          </Button>
+          {isLoading ? (
+            <LoadingButton />
+          ) : (
+            <Button
+              type="button"
+              className="w-full"
+              onClick={() => {
+                authenticate();
+              }}
+              disabled={isLoading}
+            >
+              {!isLogin ? "Sign Up" : "Login"}
+            </Button>
+          )}
           <Button
             variant={"ghost"}
             className="w-full"

@@ -4,10 +4,10 @@ import { Button } from "./ui/button";
 export default function LoadingButton({
   size,
 }: {
-  size: "default" | "sm" | "lg" | "icon" | null | undefined;
+  size?: "default" | "sm" | "lg" | "icon" | null | undefined;
 }) {
   return (
-    <Button size={size} className="hover:cursor-progress">
+    <Button size={size || "default"} className="hover:cursor-progress">
       <Loader2Icon />
       Please wait
     </Button>
