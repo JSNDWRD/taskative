@@ -11,12 +11,8 @@ const port = process.env.PORT;
 app.use(cors()); // Enable cors for all origins, specify later
 app.use(express.json());
 
-app.get("/", (_req, res) => {
-  res.json({ message: "Hello World!" });
-});
-
 app.listen(port, () => {
-  console.log(`Listening to port ${port}`);
+  console.log(`Listening to ${port}`);
 });
 
 app.post("/login", async (req, res) => {
@@ -40,6 +36,7 @@ app.post("/login", async (req, res) => {
     session: { id: user.id, currentUser: userCopy },
   });
 });
+
 app.post("/signup", async (req, res) => {
   console.log("SIGNUP REQUEST");
   try {
@@ -75,5 +72,132 @@ app.post("/signup", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal server error." });
+  }
+});
+
+// Task Tracker
+app.get("/task/:taskId", async (req, res) => {
+  const { taskId } = req.params;
+  try {
+    const body = await prisma.log.findUnique({ where: { id: taskId } });
+    res.status(200).json(body);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/task", async (req, res) => {
+  const { authorId } = req.body;
+  try {
+    const body = await prisma.log.findMany({ where: { authorId: authorId } });
+    res.status(200).json(body);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.post("/task", async (req, res) => {
+  const { author, title, startAt, endAt } = req.body;
+  try {
+    await prisma.log.create({
+      data: { author: author, title: title, startAt: startAt, endAt: endAt },
+    });
+    res.status(201).json({ message: "Task created successfully." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put("/task/:taskId", async (req, res) => {
+  const { taskId } = req.params;
+  const { title, startAt, endAt } = req.body;
+  try {
+    await prisma.log.update({
+      where: { id: taskId },
+      data: {
+        title: title,
+        startAt: startAt,
+        endAt: endAt,
+      },
+    });
+    res.status(200).json({ message: "Task updated successfully." });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.delete("/task/:taskId", async (req, res) => {
+  const { taskId } = req.params;
+  try {
+    await prisma.log.delete({ where: { id: taskId } });
+    res.status(204).json({ message: "Task deleted successfully." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Note Taking
+app.get("/note/:noteId", async (req, res) => {
+  const { noteId } = req.params;
+  try {
+    const body = await prisma.note.findUnique({ where: { id: noteId } });
+    res.status(200).json(body);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/note", async (req, res) => {
+  const { authorId } = req.body;
+  try {
+    const body = await prisma.note.findMany({ where: { authorId: authorId } });
+    res.status(200).json(body);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/note", async (req, res) => {
+  const { author, title, description, content } = req.body;
+  try {
+    await prisma.note.create({
+      data: {
+        author: author,
+        title: title,
+        description: description,
+        content: content,
+      },
+    });
+    res.status(201).json({ message: "Note created successfully." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put("/note/:noteId", async (req, res) => {
+  const { noteId } = req.params;
+  const { title, description, content } = req.body;
+  try {
+    await prisma.note.update({
+      where: { id: noteId },
+      data: {
+        title: title,
+        description: description,
+        content: content,
+      },
+    });
+    res.status(200).json({ message: "Note updated successfully." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.delete("/note/:noteId", async (req, res) => {
+  const { noteId } = req.params;
+  try {
+    await prisma.note.delete({ where: { id: noteId } });
+    res.status(204).json({ message: "Note deleted successfully." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });

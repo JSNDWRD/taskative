@@ -23,6 +23,7 @@ model User {
   age Int
   role Role @default(USER)
   logs Log[]
+  notes Note[]
   createdAt DateTime @default(now())
 }
 
@@ -31,6 +32,20 @@ model Log {
   author User? @relation(fields: [authorId], references: [id])
   authorId Int?
   title String @db.VarChar(255)
+  startAt DateTime?
+  endAt DateTime?
+  status Status @default(NOT_STARTED)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Note {
+  id Int @id @default(autoincrement())
+  author User? @relation(fields: [authorId], references: [id])
+  authorId Int?
+  title String @db.VarChar(255)
+  description String
+  content String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -38,4 +53,10 @@ model Log {
 enum Role {
   USER
   ADMIN
+}
+
+enum Status {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
 }

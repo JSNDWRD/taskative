@@ -10,17 +10,15 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Home, User } from "lucide-react";
+import { Home, LogOut, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
+import useAuthStore from "@/store/useAuthStore";
 
 export default function DashboardSidebar() {
-  const navItems = [
-    { title: "Home", url: "/", icon: Home },
-    { title: "Home", url: "/", icon: Home },
-    { title: "Home", url: "/", icon: Home },
-  ];
-
+  const navItems = [{ title: "Home", url: "/", icon: Home }];
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
   return (
     <Sidebar>
       <SidebarHeader />
@@ -46,7 +44,11 @@ export default function DashboardSidebar() {
       <SidebarFooter>
         <Button variant={"ghost"}>
           <User />
-          <span>Profile</span>
+          <span>{user?.firstName}</span>
+        </Button>
+        <Button variant={"default"} onClick={logout}>
+          <LogOut />
+          <span>Sign out</span>
         </Button>
       </SidebarFooter>
     </Sidebar>
