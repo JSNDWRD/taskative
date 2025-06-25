@@ -15,21 +15,14 @@ export default function Landing() {
             to organize and prioritize your tasks.
           </p>
           <div className="flex items-center gap-2 py-4">
-            <Button size={"lg"}>
-              {onSession ? (
-                <Link to="/dashboard" className="hover:underline">
-                  Dashboard
-                </Link>
-              ) : (
-                <Link to="/authentication" className="hover:underline">
-                  Sign Up
-                </Link>
-              )}
-            </Button>
-
-            <Button size={"lg"} variant={"outline"}>
-              Learn More
-            </Button>
+            <Link to={onSession ? "/dashboard" : "/authentication"}>
+              <Button size={"lg"}>{onSession ? "Dashboard" : "Sign Up"}</Button>
+            </Link>
+            <Link to={"#"}>
+              <Button size={"lg"} variant={"outline"}>
+                Learn More
+              </Button>
+            </Link>
           </div>
         </div>
         <div className="grow bg-white/50 h-full"></div>

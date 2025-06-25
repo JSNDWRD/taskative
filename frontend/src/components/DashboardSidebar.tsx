@@ -15,11 +15,7 @@ import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 
 export default function DashboardSidebar() {
-  const navItems = [
-    { title: "Home", url: "/", icon: Home },
-    { title: "Home", url: "/", icon: Home },
-    { title: "Home", url: "/", icon: Home },
-  ];
+  const navItems = [{ title: "Home", url: "/", icon: Home }];
 
   return (
     <Sidebar>
