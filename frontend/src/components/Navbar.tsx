@@ -1,5 +1,4 @@
 import useAuthStore from "@/store/useAuthStore";
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { LogOut } from "lucide-react";
@@ -7,10 +6,6 @@ import { LogOut } from "lucide-react";
 export default function Navbar() {
   const session = useAuthStore((state) => state.session);
   const onSession = !!session;
-  useEffect(() => {
-    console.log(session);
-    console.log(onSession);
-  }, [onSession]);
   const logout = useAuthStore((state) => state.logout);
   return (
     <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between h-14 px-6 py-4 bg-background border-b border-border">

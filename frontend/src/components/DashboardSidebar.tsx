@@ -51,7 +51,7 @@ export default function DashboardSidebar() {
           <User />
           <span>{user?.firstName}</span>
         </Button>
-        <Button variant={"default"} onClick={logout}>
+        <Button variant={"outline"} onClick={logout}>
           <LogOut />
           <span>Sign out</span>
         </Button>

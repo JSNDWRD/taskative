@@ -39,7 +39,6 @@ export default function Authentication() {
     if (isLogin) {
       login(formData.email, formData.password);
     } else {
-      console.log("Email: ", formData.email);
       signup(
         formData.email,
         formData.password,
