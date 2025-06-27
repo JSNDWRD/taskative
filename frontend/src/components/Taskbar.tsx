@@ -3,6 +3,7 @@ import {
   MenubarCheckboxItem,
   MenubarContent,
   MenubarItem,
+  MenubarLabel,
   MenubarMenu,
   // MenubarRadioGroup,
   // MenubarRadioItem,
@@ -88,23 +89,30 @@ export default function Taskbar() {
           {/* <MenubarItem inset>
             Reload <MenubarShortcut>⌘R</MenubarShortcut>
           </MenubarItem> */}
-          {/* <MenubarSeparator /> */}
+          <MenubarCheckboxItem
+            checked={!!features.sorting}
+            onClick={() => {
+              setFeatures({ sorting: !features.sorting });
+            }}
+          >
+            Enable sorting
+          </MenubarCheckboxItem>
+          <MenubarSeparator />
           <MenubarCheckboxItem
             checked={!!features.editButton}
             onClick={() => {
               setFeatures({ editButton: !features.editButton });
             }}
           >
-            Show Edit Button
+            Show edit button
           </MenubarCheckboxItem>
-          <MenubarSeparator />
           <MenubarCheckboxItem
             checked={!!features.deleteButton}
             onClick={() => {
               setFeatures({ deleteButton: !features.deleteButton });
             }}
           >
-            Show Delete Button
+            Show delete button
           </MenubarCheckboxItem>
           {/* <MenubarItem inset>Hide Sidebar</MenubarItem> */}
         </MenubarContent>

@@ -15,11 +15,7 @@ export default function TaskList() {
   return (
     <div>
       {tasks && (
-        <DataTable
-          columns={columns}
-          data={tasks}
-          hideColumn={["startAt", "endAt"]}
-        />
+        <DataTable columns={columns} data={tasks} hideColumn={["endAt"]} />
       )}
     </div>
   );

@@ -2,6 +2,8 @@ import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -13,7 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import useTaskStore from "@/store/useTaskStore";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -26,12 +29,19 @@ export function DataTable<TData, TValue>({
   data,
   hideColumn,
 }: DataTableProps<TData, TValue>) {
+  let { features } = useTaskStore.getState();
+  const [sorting, setSorting] = useState<SortingState>([]);
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    manualSorting: !features.sorting,
+    state: {
+      sorting,
+    },
   });
-
   const hideColumns = (keys: string[]): { [key: string]: boolean } => {
     return keys.reduce((acc, key) => {
       acc[key] = false;

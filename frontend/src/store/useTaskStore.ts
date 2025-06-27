@@ -17,6 +17,7 @@ export interface Task {
 export interface Features {
   editButton: boolean;
   deleteButton: boolean;
+  sorting: boolean;
 }
 
 interface TaskState {
@@ -119,6 +120,7 @@ const useTaskStore = create<TaskState>()(
         }
       },
       features: {
+        sorting: true,
         editButton: false,
         deleteButton: false,
       },
