@@ -1,12 +1,17 @@
 import type { Task } from "@/store/useTaskStore";
 import { type ColumnDef } from "@tanstack/react-table";
+import TaskModal from "./task-modal";
+import useAuthStore from "@/store/useAuthStore";
+import { Button } from "@/components/ui/button";
+import useTaskStore from "@/store/useTaskStore";
+import { Trash2 } from "lucide-react";
 
 export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "id",
     header: "No",
     cell: ({ row }) => {
-      return <p>{row.index + 1}</p>;
+      return <p className="ms-2">{row.index + 1}</p>;
     },
   },
   {
@@ -71,6 +76,39 @@ export const columns: ColumnDef<Task>[] = [
       const date = new Date(row.getValue("endAt"));
       const dateString = date.toDateString().substring(4);
       return <p>{dateString}</p>;
+    },
+  },
+  {
+    accessorKey: "edit",
+    header: "",
+    cell: ({ row }) => {
+      const authorId = useAuthStore((state) => state.session?.id);
+      let features = useTaskStore((state) => state.features);
+      const deleteTask = useTaskStore((state) => state.deleteTask);
+      const task: Task = {
+        authorId: authorId ? parseInt(authorId) : 0,
+        title: row.getValue("title"),
+        id: row.getValue("id"),
+        status: row.getValue("status"),
+        priority: row.getValue("priority"),
+        startAt: row.getValue("startAt"),
+        endAt: row.getValue("endAt"),
+      };
+      return (
+        <div className="flex gap-2 items-center">
+          {features.editButton && <TaskModal type="PUT" values={task} />}
+          {features.deleteButton && (
+            <Button
+              variant={"outline"}
+              onClick={() => {
+                deleteTask(row.getValue("id"));
+              }}
+            >
+              <Trash2 />
+            </Button>
+          )}
+        </div>
+      );
     },
   },
 ];

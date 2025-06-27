@@ -22,7 +22,8 @@ import useAuthStore from "@/store/useAuthStore";
 export default function Taskbar() {
   const authorId = parseInt(useAuthStore((state) => state.session?.id) || "0");
   let isLoading = useAuthStore((state) => state.isLoading);
-  const getTask = useTaskStore((state) => state.getTask);
+  const { getTask, setFeatures } = useTaskStore.getState();
+  let features = useTaskStore((state) => state.features);
   return (
     <Menubar className="border-0">
       <MenubarMenu>
@@ -79,21 +80,33 @@ export default function Taskbar() {
       <MenubarMenu>
         <MenubarTrigger>View</MenubarTrigger>
         <MenubarContent>
-          <MenubarCheckboxItem>Always Show Bookmarks Bar</MenubarCheckboxItem>
+          {/* <MenubarCheckboxItem>Always Show Bookmarks Bar</MenubarCheckboxItem>
           <MenubarCheckboxItem checked>
             Always Show Full URLs
           </MenubarCheckboxItem>
-          <MenubarSeparator />
-          <MenubarItem inset>
+          <MenubarSeparator /> */}
+          {/* <MenubarItem inset>
             Reload <MenubarShortcut>⌘R</MenubarShortcut>
-          </MenubarItem>
-          <MenubarItem disabled inset>
-            Force Reload <MenubarShortcut>⇧⌘R</MenubarShortcut>
-          </MenubarItem>
+          </MenubarItem> */}
+          {/* <MenubarSeparator /> */}
+          <MenubarCheckboxItem
+            checked={!!features.editButton}
+            onClick={() => {
+              setFeatures({ editButton: !features.editButton });
+            }}
+          >
+            Show Edit Button
+          </MenubarCheckboxItem>
           <MenubarSeparator />
-          <MenubarItem inset>Toggle Fullscreen</MenubarItem>
-          <MenubarSeparator />
-          <MenubarItem inset>Hide Sidebar</MenubarItem>
+          <MenubarCheckboxItem
+            checked={!!features.deleteButton}
+            onClick={() => {
+              setFeatures({ deleteButton: !features.deleteButton });
+            }}
+          >
+            Show Delete Button
+          </MenubarCheckboxItem>
+          {/* <MenubarItem inset>Hide Sidebar</MenubarItem> */}
         </MenubarContent>
       </MenubarMenu>
       <span className="grow flex justify-end items-center gap-2">
@@ -105,7 +118,7 @@ export default function Taskbar() {
         >
           <RefreshCw className={`${isLoading ? "animate-spin" : ""}`} />
         </Button>
-        <TaskModal />
+        <TaskModal type="POST" />
       </span>
     </Menubar>
   );

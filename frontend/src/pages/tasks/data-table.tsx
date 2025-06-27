@@ -18,11 +18,13 @@ import { useEffect, useMemo } from "react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  hideColumn: string[];
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  hideColumn,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -37,7 +39,7 @@ export function DataTable<TData, TValue>({
     }, {} as { [key: string]: boolean });
   };
 
-  const hiddenColumns = useMemo(() => ["startAt", "endAt"], []);
+  const hiddenColumns = useMemo(() => hideColumn, [hideColumn]);
 
   useEffect(() => {
     table.setColumnVisibility(hideColumns(hiddenColumns));

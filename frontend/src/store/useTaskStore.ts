@@ -14,15 +14,22 @@ export interface Task {
   updatedAt?: Date;
 }
 
+export interface Features {
+  editButton: boolean;
+  deleteButton: boolean;
+}
+
 interface TaskState {
   tasks: Task[] | null;
+  features: Features;
   isLoading: boolean;
   setTasks: (tasks: Task[] | null) => void;
-  setLoading: (isLoading: boolean) => void;
   getTask: (authorId: number) => Promise<Task[] | void>;
   postTask: (task: Task) => Promise<void>;
   putTask: (task: Task) => Promise<void>;
   deleteTask: (id: number) => Promise<void>;
+  setFeatures: (partial: Partial<Features>) => void;
+  setLoading: (isLoading: boolean) => void;
 }
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -88,7 +95,7 @@ const useTaskStore = create<TaskState>()(
             body: JSON.stringify(task),
           });
           setInformation({
-            message: "Task deleted successfully.",
+            message: "Task edited successfully.",
             type: "Success",
           });
         } catch (error: any) {
@@ -111,6 +118,12 @@ const useTaskStore = create<TaskState>()(
           set({ isLoading: false });
         }
       },
+      features: {
+        editButton: false,
+        deleteButton: false,
+      },
+      setFeatures: (partial) =>
+        set((state) => ({ features: { ...state.features, ...partial } })),
     }),
     {
       name: "task-storage", // unique name for your storage
