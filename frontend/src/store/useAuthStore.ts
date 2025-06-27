@@ -38,6 +38,8 @@ interface AuthState {
   ) => Promise<void>;
 }
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const useAuthStore = create<AuthState>()(
   persist(
     (set, _get) => ({
@@ -61,19 +63,16 @@ const useAuthStore = create<AuthState>()(
             });
             return;
           }
-          const request = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/login`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                email,
-                password,
-              }),
-            }
-          );
+          const request = await fetch(`${backendUrl}/login`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email,
+              password,
+            }),
+          });
           const data = await request.json();
           if (!request.ok) throw new Error(data.error || "Login failed.");
           set({
@@ -108,22 +107,19 @@ const useAuthStore = create<AuthState>()(
             });
             return;
           }
-          const request = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/signup`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                email,
-                password,
-                firstName,
-                lastName,
-                age,
-              }),
-            }
-          );
+          const request = await fetch(`${backendUrl}/signup`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email,
+              password,
+              firstName,
+              lastName,
+              age,
+            }),
+          });
           const data = await request.json();
           if (!request.ok) throw new Error(data.error || "Signup failed");
           set({

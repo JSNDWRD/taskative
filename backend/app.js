@@ -38,7 +38,6 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
-  console.log("SIGNUP REQUEST");
   try {
     const { email, password, firstName, lastName, age } = req.body;
     if (!email || !password) {
@@ -70,26 +69,27 @@ app.post("/signup", async (req, res) => {
       user: { id: user.id, email: user.email },
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: "Internal server error." });
   }
 });
 
 // Task Tracker
-app.get("/task/:taskId", async (req, res) => {
-  const { taskId } = req.params;
-  try {
-    const body = await prisma.task.findUnique({ where: { id: taskId } });
-    res.status(200).json(body);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+// app.get("/task/:taskId", async (req, res) => {
+//   const { taskId } = req.params;
+//   try {
+//     const body = await prisma.task.findUnique({ where: { id: taskId } });
+//     res.status(200).json(body);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 
-app.get("/task", async (req, res) => {
-  const { authorId } = req.body;
+app.get("/task/:authorId", async (req, res) => {
+  const { authorId } = req.params;
   try {
-    const body = await prisma.task.findMany({ where: { authorId: authorId } });
+    const body = await prisma.task.findMany({
+      where: { authorId: parseInt(authorId) },
+    });
     res.status(200).json(body);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -97,10 +97,17 @@ app.get("/task", async (req, res) => {
 });
 
 app.post("/task", async (req, res) => {
-  const { author, title, startAt, endAt } = req.body;
+  const { authorId, title, status, priority, startAt, endAt } = req.body;
   try {
     await prisma.task.create({
-      data: { author: author, title: title, startAt: startAt, endAt: endAt },
+      data: {
+        authorId: authorId,
+        title: title,
+        status: status,
+        priority: priority,
+        startAt: startAt || new Date(),
+        endAt: endAt || new Date(),
+      },
     });
     res.status(201).json({ message: "Task created successfully." });
   } catch (error) {
