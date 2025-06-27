@@ -13,14 +13,18 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import { Plus } from "lucide-react";
-import { Separator } from "./ui/separator";
-import { Button } from "./ui/button";
 import TaskModal from "@/pages/tasks/task-modal";
+import { Button } from "./ui/button";
+import { RefreshCw } from "lucide-react";
+import useTaskStore from "@/store/useTaskStore";
+import useAuthStore from "@/store/useAuthStore";
 
 export default function Taskbar() {
+  const authorId = parseInt(useAuthStore((state) => state.session?.id) || "0");
+  let isLoading = useAuthStore((state) => state.isLoading);
+  const getTask = useTaskStore((state) => state.getTask);
   return (
-    <Menubar>
+    <Menubar className="border-0">
       <MenubarMenu>
         <MenubarTrigger>File</MenubarTrigger>
         <MenubarContent>
@@ -92,12 +96,15 @@ export default function Taskbar() {
           <MenubarItem inset>Hide Sidebar</MenubarItem>
         </MenubarContent>
       </MenubarMenu>
-      <span className="grow flex justify-end">
-        {/* <span>New</span>
-          <Separator orientation="vertical" />
-          <span>
-            <Plus size={16} />
-          </span> */}
+      <span className="grow flex justify-end items-center gap-2">
+        <Button
+          variant={"outline"}
+          onClick={() => {
+            getTask(authorId);
+          }}
+        >
+          <RefreshCw className={`${isLoading ? "animate-spin" : ""}`} />
+        </Button>
         <TaskModal />
       </span>
     </Menubar>

@@ -18,7 +18,7 @@ export default function InformationModal() {
     return (
       <Alert
         variant={information?.type == "Error" ? "destructive" : "default"}
-        className="fixed bottom-4 right-4 w-96"
+        className="fixed bottom-4 right-4 w-96 z-[100]"
       >
         {information?.type == "Error" && <AlertCircleIcon />}
         {information?.type == "Success" && <CheckCircle2Icon />}

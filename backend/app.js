@@ -97,10 +97,17 @@ app.get("/task/:authorId", async (req, res) => {
 });
 
 app.post("/task", async (req, res) => {
-  const { author, title, startAt, endAt } = req.body;
+  const { authorId, title, status, priority, startAt, endAt } = req.body;
   try {
     await prisma.task.create({
-      data: { author: author, title: title, startAt: startAt, endAt: endAt },
+      data: {
+        authorId: authorId,
+        title: title,
+        status: status,
+        priority: priority,
+        startAt: startAt || new Date(),
+        endAt: endAt || new Date(),
+      },
     });
     res.status(201).json({ message: "Task created successfully." });
   } catch (error) {

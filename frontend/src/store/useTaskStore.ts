@@ -1,17 +1,17 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-// import useAuthStore from "./useAuthStore";
+import useAuthStore from "./useAuthStore";
 
 export interface Task {
-  id: number;
+  id?: number;
   authorId: number;
   title: string;
-  startAt: Date;
-  endAt: Date;
-  status: "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED";
-  priority: "NOT_SET" | "LOW" | "MEDIUM" | "HIGH";
-  createdAt: Date;
-  updatedAt: Date;
+  startAt?: Date;
+  endAt?: Date;
+  status?: "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED";
+  priority?: "NOT_SET" | "LOW" | "MEDIUM" | "HIGH";
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 interface TaskState {
@@ -25,8 +25,8 @@ interface TaskState {
   deleteTask: (id: number) => Promise<void>;
 }
 
-// const setInformation = useAuthStore((state) => state.setInformation);
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
+const { setInformation } = useAuthStore.getState();
 
 const useTaskStore = create<TaskState>()(
   persist(
@@ -45,7 +45,7 @@ const useTaskStore = create<TaskState>()(
           set({ tasks: data });
           return data;
         } catch (error: any) {
-          // setInformation({ message: error.message, type: "Error" });
+          setInformation({ message: error.message, type: "Error" });
         } finally {
           set({ isLoading: false });
         }
@@ -53,6 +53,13 @@ const useTaskStore = create<TaskState>()(
       postTask: async (task) => {
         set({ isLoading: true });
         try {
+          if (!task.title) {
+            setInformation({
+              message: "Fill all the required fields.",
+              type: "Error",
+            });
+            return;
+          }
           await fetch(`${backendUrl}/task`, {
             method: "POST",
             headers: {
@@ -60,8 +67,12 @@ const useTaskStore = create<TaskState>()(
             },
             body: JSON.stringify(task),
           });
+          setInformation({
+            message: "Task created successfully.",
+            type: "Success",
+          });
         } catch (error: any) {
-          // setInformation({ message: error.message, type: "Error" });
+          setInformation({ message: error.message, type: "Error" });
         } finally {
           set({ isLoading: false });
         }
@@ -76,12 +87,12 @@ const useTaskStore = create<TaskState>()(
             },
             body: JSON.stringify(task),
           });
-          // setInformation({
-          //   message: "Task deleted successfully.",
-          //   type: "Success",
-          // });
+          setInformation({
+            message: "Task deleted successfully.",
+            type: "Success",
+          });
         } catch (error: any) {
-          // setInformation({ message: error.message, type: "Error" });
+          setInformation({ message: error.message, type: "Error" });
         } finally {
           set({ isLoading: false });
         }
@@ -90,12 +101,12 @@ const useTaskStore = create<TaskState>()(
         set({ isLoading: true });
         try {
           await fetch(`${backendUrl}/task/${id}`, { method: "DELETE" });
-          // setInformation({
-          //   message: "Task deleted successfully.",
-          //   type: "Success",
-          // });
+          setInformation({
+            message: "Task deleted successfully.",
+            type: "Success",
+          });
         } catch (error: any) {
-          // setInformation({ message: error.message, type: "Error" });
+          setInformation({ message: error.message, type: "Error" });
         } finally {
           set({ isLoading: false });
         }
