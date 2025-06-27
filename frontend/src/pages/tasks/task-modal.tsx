@@ -25,15 +25,20 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon, Pencil } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
 import useTaskStore, { type Task } from "@/store/useTaskStore";
 import useAuthStore from "@/store/useAuthStore";
 
-export default function TaskModal() {
-  const postTask = useTaskStore((state) => state.postTask);
-  const getTask = useTaskStore((state) => state.getTask);
+export default function TaskModal({
+  type,
+  values,
+}: {
+  type: "POST" | "PUT";
+  values?: Task;
+}) {
+  const { postTask, getTask, putTask } = useTaskStore.getState();
   const authorId = useAuthStore((state) => state.session?.id) || "0";
 
   const [open, setOpen] = useState({
@@ -43,12 +48,13 @@ export default function TaskModal() {
   });
 
   const [task, setTask] = useState<Task>({
+    id: values?.id,
     authorId: parseInt(authorId),
-    title: "",
-    status: "NOT_STARTED",
-    priority: "LOW",
-    startAt: undefined,
-    endAt: undefined,
+    title: type == "PUT" ? values?.title || "" : "",
+    status: type == "PUT" ? values?.status : "NOT_STARTED",
+    priority: type == "PUT" ? values?.priority : "LOW",
+    startAt: type == "PUT" ? new Date(values?.startAt || "") : undefined,
+    endAt: type == "PUT" ? new Date(values?.endAt || "") : undefined,
   });
   return (
     <Dialog
@@ -60,7 +66,8 @@ export default function TaskModal() {
       <form>
         <DialogTrigger asChild>
           <Button variant="outline" size={"default"}>
-            New Task
+            {type == "POST" && "New Task"}
+            {type == "PUT" && <Pencil />}
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
@@ -221,14 +228,20 @@ export default function TaskModal() {
             <Button
               type="submit"
               onClick={() => {
-                postTask(task);
+                if (type == "POST") {
+                  postTask(task);
+                }
+                if (type == "PUT") {
+                  putTask(task);
+                }
                 setOpen((prev) => ({ ...prev, modal: !open.modal }));
                 setTimeout(() => {
                   getTask(parseInt(authorId));
-                }, 2000);
+                }, 1000);
               }}
             >
-              Add task
+              {type == "POST" && "Add Task"}
+              {type == "PUT" && "Save Changes"}
             </Button>
           </DialogFooter>
         </DialogContent>

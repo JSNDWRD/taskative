@@ -89,6 +89,7 @@ app.get("/task/:authorId", async (req, res) => {
   try {
     const body = await prisma.task.findMany({
       where: { authorId: parseInt(authorId) },
+      orderBy: [{ startAt: "asc" }],
     });
     res.status(200).json(body);
   } catch (error) {
@@ -117,12 +118,14 @@ app.post("/task", async (req, res) => {
 
 app.put("/task/:taskId", async (req, res) => {
   const { taskId } = req.params;
-  const { title, startAt, endAt } = req.body;
+  const { title, status, priority, startAt, endAt } = req.body;
   try {
     await prisma.task.update({
-      where: { id: taskId },
+      where: { id: parseInt(taskId) },
       data: {
         title: title,
+        status: status,
+        priority: priority,
         startAt: startAt,
         endAt: endAt,
       },
@@ -136,7 +139,7 @@ app.put("/task/:taskId", async (req, res) => {
 app.delete("/task/:taskId", async (req, res) => {
   const { taskId } = req.params;
   try {
-    await prisma.task.delete({ where: { id: taskId } });
+    await prisma.task.delete({ where: { id: parseInt(taskId) } });
     res.status(204).json({ message: "Task deleted successfully." });
   } catch (error) {
     res.status(500).json({ error: error.message });

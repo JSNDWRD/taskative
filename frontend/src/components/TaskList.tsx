@@ -12,5 +12,11 @@ export default function TaskList() {
     getTask(authorId);
   }, []);
 
-  return <div>{tasks && <DataTable columns={columns} data={tasks} />}</div>;
+  return (
+    <div>
+      {tasks && (
+        <DataTable columns={columns} data={tasks} hideColumn={["endAt"]} />
+      )}
+    </div>
+  );
 }
