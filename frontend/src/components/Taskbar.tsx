@@ -27,7 +27,7 @@ export default function Taskbar() {
   let features = useTaskStore((state) => state.features);
   return (
     <Menubar className="border-0">
-      <MenubarMenu>
+      {/* <MenubarMenu>
         <MenubarTrigger>File</MenubarTrigger>
         <MenubarContent>
           <MenubarItem>
@@ -77,7 +77,7 @@ export default function Taskbar() {
           <MenubarItem>Copy</MenubarItem>
           <MenubarItem>Paste</MenubarItem>
         </MenubarContent>
-      </MenubarMenu>
+      </MenubarMenu> */}
       <MenubarMenu>
         <MenubarTrigger>View</MenubarTrigger>
         <MenubarContent>
