@@ -107,6 +107,19 @@ const useAuthStore = create<AuthState>()(
             });
             return;
           }
+          var passRgx = /^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+
+          if (!passRgx.test(password)) {
+            set({
+              information: {
+                message:
+                  "Password must be a minimum 8 characters in length with at least one english letter, one digit, and one special character.",
+                type: "Error",
+              },
+            });
+            return;
+          }
+
           const request = await fetch(`${backendUrl}/signup`, {
             method: "POST",
             headers: {
